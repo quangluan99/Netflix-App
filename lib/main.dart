@@ -11,6 +11,16 @@ class NetflixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.light,
+      ),
+      // dark theme
+      darkTheme: ThemeData(
+        primarySwatch: Colors.blue,
+        brightness: Brightness.dark,
+      ),
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       title: 'Netflix Clone',
       home: SplashScreen(),

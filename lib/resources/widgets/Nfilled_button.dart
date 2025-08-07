@@ -13,7 +13,8 @@ class NfilledButton extends StatelessWidget {
       required this.textTheme,
       required this.size,
       required this.right,
-      required this.icon,required this.onPress});
+      required this.icon,
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +29,12 @@ class NfilledButton extends StatelessWidget {
         onPressed: onPress,
         label: Text(
           text,
-          style: textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.bodyLarge!
+              .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         icon: Icon(
           icon,
+          color: Colors.black,
           size: 25,
         ));
   }

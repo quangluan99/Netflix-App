@@ -8,12 +8,13 @@ import 'package:netflix_app/data/model/popular_model.dart';
 import 'package:netflix_app/data/model/top_rate_model.dart';
 import 'package:netflix_app/data/model/trending_model.dart';
 import 'package:netflix_app/data/model/upcoming_model.dart';
+import 'package:netflix_app/presentation/screens/movie_detailed_screen.dart';
 import 'package:netflix_app/resources/functions/get_api_now_playing.dart';
 import 'package:netflix_app/resources/functions/get_api_popular.dart';
 import 'package:netflix_app/resources/functions/get_api_top_rate.dart';
 import 'package:netflix_app/resources/functions/get_api_upcoming.dart';
 import 'package:netflix_app/resources/functions/get_apo_trending.dart';
-import 'package:netflix_app/resources/widgets/Nelevated_Button.dart';
+import 'package:netflix_app/resources/widgets/Ntext_Button.dart';
 import 'package:netflix_app/resources/widgets/Nfilled_button.dart';
 import 'package:netflix_app/resources/widgets/Nicon_Button.dart';
 
@@ -32,12 +33,14 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
   late Future<PopularMovie?> popular;
   int currentIndex = 0;
 
+  //Controllers cho PageView và ListView
   late PageController _pageController;
   late ScrollController _listViewController;
-
+  //Timer cho auto scroll
   Timer? _pageTimer;
   Timer? _listTimer;
 
+  //Biến theo dõi vị trí hiện tại của ListView
   int _currentListIndex = 0;
 
   @override
@@ -70,6 +73,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
     super.dispose();
   }
 
+// Hàm bắt đầu auto scroll cho PageView
   void _startPageAutoScroll() {
     _pageTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (_pageController.hasClients) {
@@ -90,6 +94,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
     });
   }
 
+// Hàm bắt đầu auto scroll cho ListView
   void _startListAutoScroll() {
     _listTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (_listViewController.hasClients) {
@@ -224,11 +229,20 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                               },
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return MovieDetailedScreen(
+                                            movieId: moviesResults[index].id);
+                                      },
+                                    ));
+                                  },
                                   onPanDown: (_) {
+                                    // Dừng auto scroll khi user bắt đầu vuốt
                                     _pausePageAutoScroll();
                                   },
                                   onPanEnd: (_) {
+                                    // Tiếp tục auto scroll sau 3 giây khi user ngừng vuốt
                                     Future.delayed(const Duration(seconds: 3),
                                         () {
                                       _resumePageAutoScroll();
@@ -392,10 +406,12 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                 } else if (snapshot.hasData && snapshot.data != null) {
                   final moviesResults = snapshot.data!.results;
                   return NotificationListener<ScrollNotification>(
+                    // Xử lý khi user tương tác với ListView
                     onNotification: (ScrollNotification scrollInfo) {
                       if (scrollInfo is ScrollStartNotification) {
                         _pauseListAutoScroll();
                       } else if (scrollInfo is ScrollEndNotification) {
+                        // Tiếp tục auto scroll sau 3 giây
                         Future.delayed(const Duration(seconds: 3), () {
                           _resumeListAutoScroll();
                         });
@@ -409,7 +425,8 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {},
-                          child: Container(
+                          child: 
+                          Container(
                             width: size.height * 0.15,
                             margin: EdgeInsets.only(right: 8),
                             decoration: BoxDecoration(
