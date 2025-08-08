@@ -9,11 +9,12 @@ import 'package:netflix_app/data/model/top_rate_model.dart';
 import 'package:netflix_app/data/model/trending_model.dart';
 import 'package:netflix_app/data/model/upcoming_model.dart';
 import 'package:netflix_app/presentation/screens/movie_detailed_screen.dart';
-import 'package:netflix_app/resources/functions/get_api_now_playing.dart';
-import 'package:netflix_app/resources/functions/get_api_popular.dart';
-import 'package:netflix_app/resources/functions/get_api_top_rate.dart';
-import 'package:netflix_app/resources/functions/get_api_upcoming.dart';
-import 'package:netflix_app/resources/functions/get_apo_trending.dart';
+import 'package:netflix_app/data/remote/dto/get_api_now_playing.dart';
+import 'package:netflix_app/data/remote/dto/get_api_popular.dart';
+import 'package:netflix_app/data/remote/dto/get_api_top_rate.dart';
+import 'package:netflix_app/data/remote/dto/get_api_upcoming.dart';
+import 'package:netflix_app/data/remote/dto/get_apo_trending.dart';
+import 'package:netflix_app/resources/functions/movies_Type.dart';
 import 'package:netflix_app/resources/widgets/Ntext_Button.dart';
 import 'package:netflix_app/resources/widgets/Nfilled_button.dart';
 import 'package:netflix_app/resources/widgets/Nicon_Button.dart';
@@ -208,7 +209,9 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           );
                         } else if (snapshot.hasError) {
                           return Center(
@@ -341,24 +344,36 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                 height: size.height * 0.048,
               ),
               moviesType(
+                listViewController: _listViewController,
+                pauseListAutoScroll: _pauseListAutoScroll,
+                resumeListAutoScroll: _resumeListAutoScroll,
                 textTheme: textTheme,
                 size: size,
                 futureData: upComing,
                 movieType: 'UpComing Movies',
               ),
               moviesType(
+                listViewController: _listViewController,
+                pauseListAutoScroll: _pauseListAutoScroll,
+                resumeListAutoScroll: _resumeListAutoScroll,
                 textTheme: textTheme,
                 size: size,
                 futureData: trending,
                 movieType: 'Trending Movies',
               ),
               moviesType(
+                listViewController: _listViewController,
+                pauseListAutoScroll: _pauseListAutoScroll,
+                resumeListAutoScroll: _resumeListAutoScroll,
                 textTheme: textTheme,
                 size: size,
                 futureData: topRate,
                 movieType: 'Top Rate Movies',
               ),
               moviesType(
+                listViewController: _listViewController,
+                pauseListAutoScroll: _pauseListAutoScroll,
+                resumeListAutoScroll: _resumeListAutoScroll,
                 textTheme: textTheme,
                 size: size,
                 futureData: popular,
@@ -367,91 +382,6 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
             ],
           ),
         )),
-      ),
-    );
-  }
-
-  Padding moviesType(
-      {required Size size,
-      required Future futureData,
-      required String movieType,
-      required TextTheme textTheme}) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            movieType,
-            style: textTheme.bodyLarge!
-                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            height: size.height * 0.22,
-            width: double.maxFinite,
-            child: FutureBuilder(
-              future: futureData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Get Data Error because ${snapshot.error}'),
-                  );
-                } else if (snapshot.hasData && snapshot.data != null) {
-                  final moviesResults = snapshot.data!.results;
-                  return NotificationListener<ScrollNotification>(
-                    // Xử lý khi user tương tác với ListView
-                    onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo is ScrollStartNotification) {
-                        _pauseListAutoScroll();
-                      } else if (scrollInfo is ScrollEndNotification) {
-                        // Tiếp tục auto scroll sau 3 giây
-                        Future.delayed(const Duration(seconds: 3), () {
-                          _resumeListAutoScroll();
-                        });
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      controller: _listViewController,
-                      itemCount: 8,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {},
-                          child: 
-                          Container(
-                            width: size.height * 0.15,
-                            margin: EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                    "$imageUrl${moviesResults[index].posterPath}"),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: Text('Problem to fetch data'),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
       ),
     );
   }
