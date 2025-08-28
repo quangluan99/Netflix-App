@@ -60,7 +60,7 @@ Padding moviesType({
                         },
                         child: ListView.builder(
                           controller: listViewController,
-                          itemCount: 8,
+                          itemCount: 10,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             return GestureDetector(
@@ -84,7 +84,7 @@ Padding moviesType({
                       )
                     : ListView.builder(
                         controller: listViewController,
-                        itemCount: 8,
+                        itemCount: 10,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return GestureDetector(

@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:netflix_app/common/utlis.dart';
-import 'package:netflix_app/data/model/trending_model.dart';
+import 'package:netflix_app/data/model/search_movie.dart';
 import 'package:http/http.dart' as http;
 
-class ApiTrending {
-  Future<TrendingMovie?> getApiTrending() async {
-    final endpoint = "trending/movie/day";
-    final apiUrl = "$baseUrl$endpoint$key";
+class ApiSearchMovie {
+  Future<SearchMovie?> getApiSearchMovie(String? searchName) async {
+    final endpoint = "search/movie";
+    final apiUrl = "$baseUrl$endpoint$key&query=$searchName";
     final uri = Uri.parse(apiUrl);
 
     try {
@@ -20,18 +20,21 @@ class ApiTrending {
           throw Exception("Response body is empty");
         }
         final js = jsonDecode(body);
-        debugPrint('media_type: ${js["results"][0]["media_type"]}'); //ktra data
         debugPrint(
-            'original_language: ${js["results"][0]["original_language"]}'); //ktra data
+            'CHECK DATA backdrop_path: ${js["results"][0]["backdrop_path"]}'); //ktra data
+        debugPrint(
+            'CHECK DATA poster_path: ${js["results"][0]["poster_path"]}'); //ktra data
+        debugPrint(
+            'CHECK DATA original_title: ${js["results"][0]["original_title"]}'); //ktra data
         if (js == null || js is! Map<String, dynamic>) {
           throw Exception("Decoded JSON is null or not a Map<String, dynamic>");
         }
-        return TrendingMovie.fromJson(js);
+        return SearchMovie.fromJson(js);
       } else {
-        throw Exception("Failed to load data ApiTrending");
+        throw Exception("Failed to load data ApiSearchMovie");
       }
     } catch (err) {
-      debugPrint(' getApiTrending ERROR BECAUSE : $err ');
+      debugPrint(' getApiSearchMovie ERROR BECAUSE : $err ');
       return null;
     }
   }

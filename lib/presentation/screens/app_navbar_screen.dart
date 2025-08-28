@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:netflix_app/presentation/screens/netflix_home.screen.dart';
+import 'package:netflix_app/presentation/screens/search_screen.dart';
 
 class AppNavbarScreen extends StatelessWidget {
   const AppNavbarScreen({super.key});
@@ -12,7 +13,7 @@ class AppNavbarScreen extends StatelessWidget {
         child: Scaffold(
           body: TabBarView(children: [
             NetflixHomeScreen(),
-            Scaffold(),
+            SearchScreen(),
             Scaffold(),
           ]),
           bottomNavigationBar: Container(

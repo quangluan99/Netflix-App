@@ -4,8 +4,10 @@ import 'package:netflix_app/common/utlis.dart';
 import 'package:netflix_app/data/model/movie_detail.dart';
 import 'package:netflix_app/data/model/recommen_dations.dart';
 import 'package:netflix_app/data/model/top_rate_model.dart';
+import 'package:netflix_app/data/model/tv_share.dart';
 import 'package:netflix_app/data/remote/dto/get_api_movie_detail.dart';
 import 'package:netflix_app/data/remote/dto/get_api_top_rate.dart';
+import 'package:netflix_app/data/remote/dto/get_api_tv_share.dart';
 import 'package:netflix_app/data/remote/dto/get_recomend_dations.dart';
 import 'package:netflix_app/resources/functions/movies_Type.dart';
 import 'package:netflix_app/resources/widgets/Button_Text_Icon.dart';
@@ -22,12 +24,14 @@ class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
   late Future<MovieDetail?> detail;
   late Future<RecommenDations?> recommenDations;
   late Future<TopRateMovie?> topRate;
+  late Future<TvShare?> tvShare;
 
   @override
   void initState() {
     recommenDations = getDataApiRecommenDations(widget.movieId);
     detail = getDataApiMovieDetail(widget.movieId);
     topRate = getDataApiTopRate();
+    tvShare = getDataApiTvShare();
     super.initState();
   }
 
@@ -278,8 +282,8 @@ class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
                                     ),
                                     moviesType(
                                         size: size,
-                                        futureData: recommenDations,
-                                        movieType: "Movies Share",
+                                        futureData: tvShare,
+                                        movieType: "TV Share",
                                         textTheme: textTheme),
                                   ],
                                 ),

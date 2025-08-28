@@ -224,7 +224,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                             borderRadius: BorderRadius.circular(20),
                             child: PageView.builder(
                               controller: _pageController,
-                              itemCount: 8,
+                              itemCount: 10,
                               onPageChanged: (value) {
                                 setState(() {
                                   currentIndex = value;
@@ -292,7 +292,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        8,
+                        10,
                         (index) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.bounceInOut,
